@@ -2,14 +2,75 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build",
+            "label": "建置",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "build",
                 "${workspaceFolder}/netcore-vscode-tasks.csproj"
             ],
-            "problemMatcher": "$msCompile"
+            "problemMatcher": "$msCompile",
+            "presentation": {
+                "echo": true,
+                "reveal": "silent",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "發行",
+            "type": "process",
+            "command": "dotnet",
+            "args": [
+                "publish",
+                "-c",
+                "Release",
+                "${workspaceFolder}/netcore-vscode-tasks.csproj"
+            ],
+            "problemMatcher": "$msCompile",
+            "presentation": {
+                "echo": true,
+                "reveal": "silent",
+                "focus": true,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            }
+        },
+        {
+            "label": "部署",
+            "dependsOn": [
+                "發行"
+            ],
+            "options": {
+                "shell": {
+                    "executable": "C:\\Users\\user\\AppData\\Local\\Microsoft\\WindowsApps\\ubuntu.exe",
+                    "args": [
+                        "run"
+                    ]
+                }
+            },
+            "type": "shell",
+            "command": "rsync",
+            "args": [
+                "-avzr",
+                "bin/Release/netcoreapp2.2/publish/*",
+                "will@164.2.33.3:myapp/"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": true,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            }
         }
     ]
 }
